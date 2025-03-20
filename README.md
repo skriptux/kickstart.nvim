@@ -1,5 +1,12 @@
 # kickstart.nvim
 
+## В debian
+
+sudo apt install nodejs npm
+sudo apt install ripgrep
+sudo apt install zip unzip
+sudo apt install fd-find
+
 ## Introduction
 
 A starting point for Neovim that is:
