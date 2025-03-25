@@ -1,11 +1,17 @@
 # kickstart.nvim
+## H2
+### H3
+#### H4
+##### H5
 
 ## В debian
 
+```bash
 sudo apt install nodejs npm
-sudo apt install ripgrep
+sudo apt install ripgrep file
 sudo apt install zip unzip
 sudo apt install fd-find
+```
 
 ## Introduction
 
