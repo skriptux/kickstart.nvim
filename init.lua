@@ -2,6 +2,9 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
+vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'double' }) -- Можно заменить на "single", "double", "shadow")
+vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
+
 vim.opt.spell = true
 vim.opt.spelllang = { 'en', 'ru' }
 vim.opt.wrap = false
@@ -521,7 +524,7 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -566,7 +569,7 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
         -- 'black',
         -- 'ruff',
-        -- 'prettier',
+        'prettier',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -622,7 +625,8 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        python = { 'ruff', 'black', 'prettier' },
+        python = { 'black' },
+        markdown = { 'prettier' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
@@ -867,9 +871,9 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
   require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
@@ -904,22 +908,3 @@ require('lazy').setup({
     },
   },
 })
-
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
---
---
-
--- Чтобы добавить рамку (border) к окну документации (hover), настрой vim.lsp.handlers["textDocument/hover"].
--- Можно заменить "rounded" на другие стили:
--- "single" → ─ │ ┌ ┐ ┘ └
--- "double" → ═ ║ ╔ ╗ ╝ ╚
--- "shadow" → Тень вместо рамки
--- {"┌", "─", "┐", "│", "┘", "─", "└", "│"} → Кастомные символы
-vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
-  vim.lsp.handlers.hover,
-  { border = 'double' } -- Можно заменить на "single", "double", "shadow"
-)
-
--- Рамка для сигнатурных подсказок (signatureHelp)
-vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
