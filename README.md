@@ -1,14 +1,36 @@
 # kickstart.nvim
 
-## В debian
+## Recommended Step
 
-```bash
-sudo apt install nodejs npm
-sudo apt install ripgrep file
-sudo apt install zip unzip
-sudo apt install fd-find
-sudo npm install -g markdownlint-cli
-```
+[Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo
+so that you have your own copy that you can modify, then install by cloning the
+fork to your machine using one of the commands below, depending on your OS.
+
+> **NOTE**
+> Your fork's URL will be something like this:
+> `https://github.com/<your_github_username>/kickstart.nvim.git`
+
+You likely want to remove `lazy-lock.json` from your fork's `.gitignore` file
+too - it's ignored in the kickstart repo to make maintenance easier, but it's
+[recommended to track it in version control](https://lazy.folke.io/usage/lockfile).
+
+## Prerequisites
+
+- [True Color Terminal](https://gist.github.com/kurahaupo/6ce0eaefe5e730841f03cb82b061daa2#now-supporting-true-color) - Make Neovim look pretty
+- [Neovim](https://neovim.io/) - Version 0.9.1 or later
+- [Nerd Font](https://www.nerdfonts.com/) - Needed to see nice icons in Neovim
+- [ripgrep](https://github.com/BurntSushi/ripgrep) - Needed for Telescope Fuzzy Finder
+- [xclip](https://linuxconfig.org/how-to-use-xclip-on-linux) - Needed for system clipboard support
+- [npm/node](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) - Needed for some LSP servers (see commented lines in [nvim-lspconfig.lua](.config/nvim/lua/plugins/nvim-lspconfig.lua))
+
+## Optional
+
+- **TMUX**
+  - TMUX is a way to organize multiple terminal sessions, windows and panels and works very nicely in conjunction with Neovim.
+  - I've included my TMUX configuration file in this repo as well [.tmux.conf](.tmux.conf)
+- **SHELL SETTINGS**
+  - This will set your terminal to use vim motions. You can put it in your ~/.bashrc or similar file:
+    `set -o vi`
 
 ## Introduction
 
@@ -21,6 +43,16 @@ A starting point for Neovim that is:
 **NOT** a Neovim distribution, but instead a starting point for your configuration.
 
 ## Installation
+
+### В debian
+
+```bash
+sudo apt install nodejs npm
+sudo apt install ripgrep file
+sudo apt install zip unzip
+sudo apt install fd-find
+sudo npm install -g markdownlint-cli
+```
 
 ### Install Neovim
 
@@ -61,20 +93,6 @@ Neovim's configurations are located under the following paths, depending on your
 | Linux, MacOS         | `$XDG_CONFIG_HOME/nvim`, `~/.config/nvim` |
 | Windows (cmd)        | `%localappdata%\nvim\`                    |
 | Windows (powershell) | `$env:LOCALAPPDATA\nvim\`                 |
-
-#### Recommended Step
-
-[Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo
-so that you have your own copy that you can modify, then install by cloning the
-fork to your machine using one of the commands below, depending on your OS.
-
-> **NOTE**
-> Your fork's URL will be something like this:
-> `https://github.com/<your_github_username>/kickstart.nvim.git`
-
-You likely want to remove `lazy-lock.json` from your fork's `.gitignore` file
-too - it's ignored in the kickstart repo to make maintenance easier, but it's
-[recommended to track it in version control](https://lazy.folke.io/usage/lockfile).
 
 #### Clone kickstart.nvim
 
@@ -124,6 +142,7 @@ information about extending and exploring Neovim. That also includes
 examples of adding popularly requested plugins.
 
 > [!NOTE]
+>
 > For more information about a particular plugin check its repository's documentation.
 
 ### Getting Started

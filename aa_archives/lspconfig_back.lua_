@@ -1,0 +1,74 @@
+return {
+  {
+    -- Main LSP Configuration
+    'neovim/nvim-lspconfig',
+    dependencies = {
+      'hrsh7th/cmp-nvim-lsp',
+    },
+    config = function()
+      vim.diagnostic.config {
+        severity_sort = true,
+        float = { border = 'rounded', source = 'if_many' },
+        underline = { severity = vim.diagnostic.severity.ERROR },
+        virtual_text = {
+          source = 'if_many',
+          spacing = 2,
+        },
+      }
+
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+
+      local servers = {
+        pyright = {  -- Настройка для pyright (LSP для Python)
+          settings = {
+            python = {
+              analysis = {
+                typeCheckingMode = "basic",  -- Уровень проверки типов (можно выбрать между "off", "basic", "strict")
+                diagnosticMode = "openFilesOnly",  -- Диагностика только открытых файлов
+              },
+            },
+          },
+        },
+
+
+        lua_ls = {  -- Настройка для lua_ls (LSP для Lua)
+          settings = {
+            Lua = {
+              runtime = {
+                version = "LuaJIT",  -- Указывает версию Lua
+                path = vim.split(package.path, ";"),  -- Подключаем пути Lua
+              },
+              diagnostics = {
+                globals = { "vim" },  -- Добавляем переменную "vim" как глобальную для диагностики
+              },
+              workspace = {
+                library = vim.api.nvim_get_runtime_file("", true),  -- Автоматическое подключение всех библиотек Neovim
+              },
+              completion = {
+                callSnippet = "Replace",  -- Использовать фрагменты (сниппеты) для автозавершения
+              },
+            },
+          },
+        },
+      }
+
+      for server, config in pairs(servers) do
+        config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, config.capabilities or {})
+        require('lspconfig')[server].setup(config)
+      end
+    end,
+  },
+
+  {
+    -- LSP Plugins for Lua Development
+    'folke/lazydev.nvim',
+    ft = 'lua',
+    opts = {
+      library = {
+        -- Load luvit types when the `vim.uv` word is found
+        { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+      },
+    },
+  },
+}
