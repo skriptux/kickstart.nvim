@@ -2,63 +2,65 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.g.have_nerd_font = true
 
-local o = vim.opt
--- Editor options
--- https://dev.to/slydragonn/ultimate-neovim-setup-guide-lazynvim-plugin-manager-23b7
--- https://blog.gabedunn.dev/posts/2023-03-09-neovim-config.html
-o.number = true             -- Print the line number in front of each line
-o.relativenumber = true     -- Show the line number relative to the line with the cursor in front of each line.
-o.clipboard = "unnamedplus" -- uses the clipboard register for all operations except yank.
-o.syntax = "on"             -- When this option is set, the syntax with this name is loaded.
-o.autoindent = true         -- Copy indent from current line when starting a new line.
-o.cursorline = true         -- Highlight the screen line of the cursor with CursorLine.
-o.expandtab = true          -- In Insert mode: Use the appropriate number of spaces to insert a <Tab>.
-o.shiftwidth = 2            -- Number of spaces to use for each step of (auto)indent.
-o.tabstop = 2               -- Number of spaces that a <Tab> in the file counts for.
-o.encoding = "UTF-8"        -- Sets the character encoding used inside Vim.
-o.ruler = true              -- Show the line and column number of the cursor position, separated by a comma.
-o.mouse = "a"               -- Enable the use of the mouse. "a" you can use on all modes
-o.title = true              -- When on, the title of the window will be set to the value of 'titlestring'
-o.hidden = true             -- When on a buffer becomes hidden when it is |abandon|ed
-o.ttimeoutlen = 0           -- The time in milliseconds that is waited for a key code or mapped key sequence to complete.
-o.wildmenu = true           -- When 'wildmenu' is on, command-line completion operates in an enhanced mode.
-o.showcmd = true            -- Show (partial) command in the last line of the screen. Set this option off if your terminal is slow.
-o.showmatch = true          -- When a bracket is inserted, briefly jump to the matching one.
-o.inccommand =
-"split"                     -- When nonempty, shows the effects of :substitute, :smagic, :snomagic and user commands with the :command-preview flag as you type.
-o.splitright = true
-o.splitbelow = true         -- When on, splitting a window will put the new window below the current one
-o.termguicolors = true
+-- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
+-- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
+-- is not what someone will guess without a bit more experience.
+--
+-- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
+-- or just use <C-\><C-n> to exit terminal mode
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
--- [[ Install `lazy.nvim` plugin manager ]]
---    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
+-- Clear highlights on search when pressing <Esc> in normal mode
+--  See `:help hlsearch`
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+require'core.options'
+require'core.autocmd'
+
+-- Keybinds to make split navigation easier.
+--  Use CTRL+<hjkl> to switch between windows
+--
+--  See `:help wincmd` for a list of all window commands
+vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+vim.lsp.enable { 'luals', 'pyright' }
+vim.diagnostic.config({ virtual_lines = true })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+
+
+
+-- Lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
+---@diagnostic disable-next-line: undefined-field
+if not vim.uv.fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
   local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
   if vim.v.shell_error ~= 0 then
     error("Error cloning lazy.nvim:\n" .. out)
   end
-end ---@diagnostic disable-next-line: undefined-field
+end
+---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-
-  -- lua/plugins/rose-pine.lua
+  -- LSP Plugins
   {
-    "rose-pine/neovim",
-    name = "rose-pine",
-    config = function()
-      require("rose-pine").setup({
-        dark_variant = "moon",      -- Options: 'moon', 'dawn', 'rose'
-        disable_background = false, -- Set to true for a transparent background
-        highlight_groups = {        -- Customize specific highlight groups
-          Normal = { bg = "none" }, -- Example of making the Normal background transparent
-        },
-      })
-      vim.cmd("colorscheme rose-pine")
-    end,
+    -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
+    -- used for completion, annotations and signatures of Neovim apis
+    'folke/lazydev.nvim',
+    ft = 'lua',
+    opts = {
+      library = {
+        -- Load luvit types when the `vim.uv` word is found
+        { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+      },
+    },
   },
+  'tpope/vim-sleuth',
+  require 'kickstart.plugins.autopairs',
+  -- require 'kickstart.plugins.copilot',
+  { import = 'custom.plugins' },
 
-  { import = "custom.plugins" },
 })
