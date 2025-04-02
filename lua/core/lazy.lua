@@ -16,6 +16,11 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup {
   spec = {
+  {
+    "nvim-lualine/lualine.nvim",
+    event = "VeryLazy",
+    opts = {},
+  },
     -- { import = 'lazyvim.plugins' },
     { import = 'custom.plugins' },
     -- add LazyVim and import its plugins
