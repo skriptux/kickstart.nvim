@@ -16,6 +16,7 @@ return {
   opts = {
     filesystem = {
       window = {
+        position = "right",  -- Открывать Neo-tree справа
         mappings = {
           ['\\'] = 'close_window',
         },

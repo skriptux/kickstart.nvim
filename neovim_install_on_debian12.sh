@@ -1,4 +1,5 @@
 #!/bin/bash
+# УСТАНОВКА NEOVIM
 
 set -e
 

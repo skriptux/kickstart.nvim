@@ -1,5 +1,7 @@
 # kickstart.nvim
 
+[For example Lazyvim](https://www.lazyvim.org/)
+
 ## Recommended Step
 
 [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repo

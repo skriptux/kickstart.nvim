@@ -1,0 +1,36 @@
+return {
+  {
+    "supermaven-inc/supermaven-nvim",
+    event = "InsertEnter",
+    cmd = {
+      "SupermavenUseFree",
+      "SupermavenUsePro",
+    },
+    opts = {
+      keymaps = {
+        accept_suggestion = nil, -- handled by nvim-cmp / blink.cmp
+      },
+      disable_inline_completion = vim.g.ai_cmp,
+      ignore_filetypes = { "bigfile", "snacks_input", "snacks_notif" },
+    },
+  },
+
+  -- add ai_accept action
+  {
+    "supermaven-inc/supermaven-nvim",
+    opts = function()
+      local suggestion = require("supermaven-nvim.completion_preview")
+      suggestion.suggestion_group = "SupermavenSuggestion"
+
+      _G.ai_accept = function()
+        if suggestion.has_suggestion() then
+          vim.cmd("undo")
+          vim.schedule(function()
+            suggestion.on_accept_suggestion()
+          end)
+          return true
+        end
+      end
+    end,
+  },
+}
